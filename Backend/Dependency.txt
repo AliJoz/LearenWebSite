@@ -1,0 +1,32 @@
+Npm init --y 
+  is yes About project
+ ------------------------------------------
+   npm i express
+npm i body-parser
+   About backend in project
+-----------------------------------
+npm i cors
+CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
+------------------------
+npm i dotenv
+ file env 
+ -----------------
+ npm i fastest-validator
+ About vliditor  is user
+ ---------------------
+ npm i jsonwebtoken
+ token is about user
+
+ ------------------
+ npm i mongoose
+ monogoes  Db
+ ----------------------------
+ npm i multer 
+
+ is uploder file and img
+
+ -----------------
+ npm i nodemailer
+ Send emails from Node.js – easy as cake! 🍰✉️
+ ---------------------------
+ npm --build-from-source i bcrypt
