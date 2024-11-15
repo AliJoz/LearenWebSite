@@ -1,0 +1,59 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# IDE directories
+.vscode/
+.idea/
+
+# Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Node.js directories
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Package files
+package-lock.json
+yarn.lock
+
+# Virtual environment directories
+venv/
+env/
+.venv/
+.env/
+
+# Test files
+coverage/
+*.coveragerc
+nosetests.xml
+*.hypothesis/
+
+# System and environment-related files
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Build directories
+dist/
+build/
+*.egg-info/
+
+# Security files
+*.env
+*.json
+
+# Temporary files
+*.bak
+*.tmp
+*.swp
