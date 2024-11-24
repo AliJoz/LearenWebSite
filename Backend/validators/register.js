@@ -9,8 +9,9 @@ const schema = {
     Password:{type:"string", min: 8, max: 24 },
     confirmPassword:{type:"equal",field: "password"},
     phone: { type: "string", length: 11},
-    status: "boolean" 
+ $$strict:"true",
 };
 
 const check = v.compile(schema);
 
+module.exports = check;
