@@ -7,7 +7,7 @@ const schema = {
     username:{type:"string", min: 3, max: 100},
     email:{type:"email" ,required: true,},
     Password:{type:"string", min: 8, max: 24 },
-    confirmPassword:{type:"equal",field: "password"},
+    confirmPassword:{ type: "equal", field: "Password" },
     phone: { type: "string", length: 11},
  $$strict:"true",
 };
