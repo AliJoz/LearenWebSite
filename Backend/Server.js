@@ -5,7 +5,7 @@ require("dotenv").config();
 const port=process.env.PORT;
 (async()=>{
     await mongoose.connect(process.env.MONGO_URL);
-    console.log("conncte Ditabase")
+    console.log("connceted Ditabase")
 })()
 
 app.listen(port,()=>{

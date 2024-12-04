@@ -1,19 +1,18 @@
 const validitor=require('../../validators/register')
 const UserModel=require('../../models/User');
 const { Mongoose } = require('mongoose');
-const Registervaalid=require('../../validators/register')
-exports.register=async(req,res)=>{
-  const validitor = Registervaalid(req.body);
-  if (!validitor) {
-      return res.status(422).json(validitor);
-  }
 
-  const { name, username, Email, Password, phone } = req.body;
-
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+exports.register = async (req, res) => {
+  const valid = UserModel(req.body);
+  const { name, username, email, Password,confirmPassword, phone } = req.body;
   try {
       const isUser = await UserModel.findOne({
           $or: [
-              { username, Email ,phone}
+              { username },
+              { email },
+              { phone }
           ]
       });
 
@@ -22,34 +21,39 @@ exports.register=async(req,res)=>{
               message: "The user already exists."
           });
       }
-     const countOfUsers = await UserModel.count();
-      const hashedPassword = await bcrypt.hash(password, 10);
 
-      const role = countOfUsers > 0 ? "USER" : "ADMIN";
+      // شمارش کاربران برای تنظیم نقش
+      const countOfUsers = await UserModel.countDocuments();
 
-      const user = await userModel.create({
-          email,
+      // هش کردن رمز عبور
+      if (!Password || Password.trim() === "") {
+          return res.status(400).json({ error: "Password is required." });
+      }
+      const hashedPassword = await bcrypt.hash(Password, 10);
+
+      // ایجاد کاربر جدید
+      const user = await UserModel.create({
+        email,
           username,
           name,
           phone,
           password: hashedPassword,
-          role,
+          role: countOfUsers > 0 ? "USER" : "ADMIN",
       });
-      
 
-    
-
-      res.status(201).json({
-          message: "User registered successfully!"
+      // تولید توکن JWT
+      const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "30d",
       });
+
+      res.status(201).json({ user, accessToken });
   } catch (error) {
-      console.error(error);
+      console.error("Error in register function:", error);
       res.status(500).json({
-          message: "Internal server error"
+          message: "Internal server error",
       });
   }
-}
-
+};
 exports.Login=async(req,res)=>{
 
 }
