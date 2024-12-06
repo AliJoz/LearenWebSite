@@ -1,10 +1,11 @@
 const UserModel = require("../../models/User");
+const validtor=require("../../validators/register")
 const { Mongoose } = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 exports.register = async (req, res) => {
-  const validationResult = UserModel(req.body);
+  const validationResult = validtor(req.body);
   if (validationResult != true) {
     return res.status(422).json(validationResult);
   }
@@ -25,7 +26,9 @@ exports.register = async (req, res) => {
     return res.status(400).json({ error: "Password is required." });
   }
   const hashedPassword = await bcrypt.hash(Password, 10);
-
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // تولید کد ۶ رقمی
+  // res.send(otpCode)
+  const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // انقضا در ۱۰ دقیقه
   const user = await UserModel.create({
     email,
     username,
@@ -44,56 +47,58 @@ exports.register = async (req, res) => {
   res.status(201).json({ user:userobject, accessToken });
 };
 exports.Login = async (req, res) => {
-  const { username, email, Password, phone } = req.body;
+  try {
+    const { username, email, password, phone } = req.body;
+    if (!username && !email && !phone) {
+      return res.status(400).json({
+        error: "Please provide a username, email, or phone number.",
+      });
+    }
+    const user = await UserModel.findOne({
+      $or: [{ username }, { email }, { phone }],
+    });
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found.",
+      });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        error: "Invalid password.",
+      });
+    }
 
-  if (!username && !email && !phone) {
-    return res.status(400).json({
-      error: "Please provide a username, email, or phone number.",
+    const userObject = user.toObject();
+    Reflect.deleteProperty(userObject, 'password');
+    const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+    const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      maxAge: 15 * 60 * 1000, // 15 دقیقه
+      sameSite: 'Strict',
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 روز
+      sameSite: 'Strict',
+    });
+
+    res.status(200).json({ message: "Login successful" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Something went wrong during login.",
     });
   }
-
-  const user = await UserModel.findOne({
-    $or: [{ username }, { email }, { phone }],
-  });
-
-  if (!user) {
-    return res.status(404).json({
-      error: "User not found.",
-    });
-  }
-
-  const isPasswordValid = await bcrypt.compare(Password, user.password);
-  if (!isPasswordValid) {
-    return res.status(401).json({
-      error: "Invalid credentials.",
-    });
-  }
-
-  const userObject = user.toObject();
-  Reflect.deleteProperty(userObject, 'password');
-
-  const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
-  const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
-
-  user.refreshToken = refreshToken;
-  await user.save();
-
-  res.cookie('accessToken', accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 15 * 60 * 1000, // 15 minutes
-    sameSite: 'Strict',
-  });
-
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    sameSite: 'Strict',
-  });
-
-  res.status(200).json({ message: "Login successful" });
 };
+
 
 
 exports.getme = async (req, res) => {};

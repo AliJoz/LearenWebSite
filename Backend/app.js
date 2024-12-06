@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const bodyParsers = require("body-parser");
 const authRouter = require("./routes/auth");
+const userRouter = require("./routes/users");
 
 app.use(
   "/courses/covers",
@@ -19,5 +20,6 @@ app.use(bodyParsers.json());
 // });
 
 app.use("/v1/auth", authRouter);
+app.use("/v1/auth", userRouter);
 
 module.exports = app;

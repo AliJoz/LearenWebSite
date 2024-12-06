@@ -22,6 +22,8 @@ const schema = new mongoose.Schema(
       enum: ["ADMIN", "USER"],
     },
     refreshToken: { type: String }, // ذخیره‌ی Refresh Token
+    otpCode: { type: String, default: null },
+    otpExpires: { type: Date, default: null },
   },
   { timestamps: true }
 );

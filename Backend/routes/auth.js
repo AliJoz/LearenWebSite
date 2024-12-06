@@ -9,6 +9,6 @@ router.post("/login", Contoroller.Login);
 router.post('/refresh-token', Contoroller.refreshToken);
 router.post('/logout', Contoroller.logout);
 
-router.post("/me", Contoroller.getme);
+// router.post("/me", Contoroller.getme);
 
 module.exports = router;
