@@ -21,6 +21,7 @@ const schema = new mongoose.Schema(
       default: "USER",
       enum: ["ADMIN", "USER"],
     },
+    refreshToken: { type: String }, // ذخیره‌ی Refresh Token
   },
   { timestamps: true }
 );
