@@ -2,10 +2,11 @@ const usermodel=require('../../models/User')
 const banuser=require('./../../models/ban_phone')
 
 
-exports. banUser=async (res,req)=>{
+exports. banUser= async (req, res) => {
+    res.send("d")
     const mainUser = await usermodel.findOne({ _id: req.params.id }).lean();
-    const banUserResult = banUserModel.create({ phone: mainUser.phone });
-    if (banUserModel) {
+    const banUserResult = banuser.create({ phone: mainUser.phone });
+    if (banuser) {
         return res.status(200).json({ message: "User ban successfully :))" });
       }
     
