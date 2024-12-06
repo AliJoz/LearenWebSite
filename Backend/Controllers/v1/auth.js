@@ -128,4 +128,22 @@ exports.refreshToken = async (req, res) => {
 };
 
 
+exports.logout = async (req, res) => {
+  // حذف Refresh Token از پایگاه داده
+  const { refreshToken } = req.cookies;
+  if (refreshToken) {
+    const user = await UserModel.findOne({ refreshToken });
+    if (user) {
+      user.refreshToken = null; // حذف Refresh Token
+      await user.save();
+    }
+  }
+
+  // حذف کوکی‌ها
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
+
+  return res.status(200).json({ message: 'Logout successful' });
+};
+
 // // 
