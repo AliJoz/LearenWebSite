@@ -57,6 +57,8 @@ exports.Login = async (req, res) => {
     const user = await UserModel.findOne({
       $or: [{ username }, { email }, { phone }],
     });
+    console.log("user:", user);
+
     if (!user) {
       return res.status(404).json({
         error: "User not found.",
@@ -101,7 +103,12 @@ exports.Login = async (req, res) => {
 
 
 
-exports.getme = async (req, res) => {};
+exports.getme = async (req, res) => {
+  const user =await UserModel.find({});
+  res.status(200).json( user );
+
+
+};
 
 exports.refreshToken = async (req, res) => {
   const { refreshToken } = req.cookies;

@@ -8,7 +8,18 @@ const port=process.env.PORT;
     console.log("connceted Ditabase")
 })()
 
+app.get("/", (req, res) => {
+    console.log("Token =>",req.headers("Authorization").split(" ")[1]);
+    res.json({ message: "Ok" });
+})
+
 app.listen(port,()=>{
     console.log(`Server running on port ${port}`)
 })
 
+
+
+// app.get("/", (req, res) => {
+//   console.log("Token =>", req.header("Authorization").split(" ")[1]);
+//   res.json({ message: "Ok" });
+// });
