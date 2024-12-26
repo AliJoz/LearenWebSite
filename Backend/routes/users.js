@@ -4,7 +4,7 @@ const userauth = require("./../middlewares/auth");
 const isadmin = require("./../middlewares/isadmin");
 const router = express.Router();
 
-router.route("/ban/:id")
-.post(userauth,userauth,userController.banUser);
+router.route("/ban/:id").post(userauth,userController.banUser);
 
+router.route("/ChangRoll").put( userController.Changeroll);//is admin ...
 module.exports = router;

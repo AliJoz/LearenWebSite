@@ -15,6 +15,6 @@ app.use(bodyParsers.urlencoded({ extended: false }));
 app.use(bodyParsers.json());
 
 app.use("/v1/auth", authRouter);
-app.use("/v1/auth", userRouter);
+app.use("/v1/user", userRouter);
 
 module.exports = app;
