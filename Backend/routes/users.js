@@ -8,5 +8,5 @@ router.route("/ban/:id").post(userauth,userController.banUser);
 
 router.route("/ChangRoll").put( userController.Changeroll);//is admin ...
 
-router.post("/Edited", userController.Edited);
+router.route("/Edited").post(userController.Edite);
 module.exports = router;

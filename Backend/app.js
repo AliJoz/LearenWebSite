@@ -5,6 +5,7 @@ const path = require("path");
 const bodyParsers = require("body-parser");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
+const categoriesRouter = require("./routes/category");
 
 app.use(
   "/courses/covers",
