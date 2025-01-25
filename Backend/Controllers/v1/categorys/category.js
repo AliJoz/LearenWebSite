@@ -1,3 +1,4 @@
+const { Mongoose } = require("mongoose");
 const categoryModel = require("../../../models/category");
 
 exports.create = async (req, res) => {
@@ -15,9 +16,38 @@ exports.getAll = async (req, res) => {
 // //
 
 exports.remove = async (req, res) => {
-  // ...
+  const IdCategory = req.body;
+  const isValidID = Mongoose.Types.ObjectId.isValid(IdCategory);
+  if (!isValidID) {
+    return res.status(409).json({
+      message: "Category ID is not valid !!",
+    });
+  }
+
+  const deletedCategory = await categoryModel.findOneAndRemove({
+    _id: id,
+  });
+
+  return res.json(deletedCategory);
+
 };
 
 exports.update = async (req, res) => {
-  // ...
+  const updatedCategory = await categoryModel.findOneAndUpdate(
+    {
+      _id: req.params.id,
+    },
+    {
+      title,
+      href,
+    }
+  );
+
+  if (!updatedCategory) {
+    return res.status(404).json({
+      message: "Category not found !!",
+    });
+  }
+
+  return res.json(updatedCategory);
 };
